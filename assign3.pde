@@ -104,7 +104,7 @@ int countNeighborBombs(int col,int row){
           } 
         }
       }
-  return 0;
+  return count;
 }
 
 void setBombs(){
