@@ -6,18 +6,15 @@ int flagCount; // 共插了幾支旗
 int nSlot; // 分割 nSlot*nSlot格
 int totalSlots; // 總格數
 final int SLOT_SIZE = 100; //每格大小
-
 int sideLength; // SLOT_SIZE * nSlot
 int ix; // (width - sideLength)/2
 int iy; // (height - sideLength)/2
-
 // game state
 final int GAME_START = 1;
 final int GAME_RUN = 2;
 final int GAME_WIN = 3;
 final int GAME_LOSE = 4;
 int gameState;
-
 // slot state for each slot
 final int SLOT_OFF = 0;
 final int SLOT_SAFE = 1;
@@ -25,9 +22,7 @@ final int SLOT_BOMB = 2;
 final int SLOT_FLAG = 3;
 final int SLOT_FLAG_BOMB = 4;
 final int SLOT_DEAD = 5;
-
 PImage bomb, flag, cross ,bg;
-
 void setup(){
   size (640,480);
   textFont(createFont("font/Square_One.ttf", 20));
@@ -35,7 +30,6 @@ void setup(){
   flag=loadImage("data/flag.png");
   cross=loadImage("data/cross.png");
   bg=loadImage("data/bg.png");
-
   nSlot = 4;
   totalSlots = nSlot*nSlot;
   // 初始化二維陣列
@@ -47,7 +41,6 @@ void setup(){
   
   gameState = GAME_START;
 }
-
 void draw(){
   switch (gameState){
     case GAME_START:
@@ -70,8 +63,6 @@ void draw(){
           if (clickCount == (16-bombCount)){
             gameState = GAME_WIN;
           }
-
-
           // -----------------------------------
           break;
     case GAME_WIN:
@@ -86,19 +77,18 @@ void draw(){
           break;
   }
 }
-
 int countNeighborBombs(int col,int row){
   // -------------- Requirement B ---------
   int count=0;
        if(slot[col][row]==SLOT_BOMB){
         return -1;
        }
-      for(int i=-1; i<=1; i++){
-        for(int j=-1; j<=1; j++){
-          if((i!=0 || j!=0) && (col+i)>=0 && (col+i)<=3 && (row+j)>=0 && (row+j)<=3){
-            if(slot[col+i][row+j]==SLOT_BOMB){
+      for(int m=-1; m<=1; m++){
+        for(int n=-1; n<=1; n++){
+          if((m!=0 || n!=0) && (col+m)>=0 && (col+m)<=3 && (row+n)>=0 && (row+n)<=3){
+            if(slot[col+m][row+n]==SLOT_BOMB){
               count++;}
-            else if(slot[col+i][row+j]==SLOT_SAFE){
+            else if(slot[col+m][row+n]==SLOT_SAFE){
              showSlot(col, row, count);
             }
           } 
@@ -106,7 +96,6 @@ int countNeighborBombs(int col,int row){
       }
   return count;
 }
-
 void setBombs(){
   // initial slot
   for (int col=0; col < nSlot; col++){
@@ -127,10 +116,8 @@ void setBombs(){
       }
     }
   }
-
   // ---------------------------------------
 }
-
 void drawEmptySlots(){
   background(180);
   image(bg,0,0,640,480);
@@ -140,7 +127,6 @@ void drawEmptySlots(){
     }
   }
 }
-
 void showSlot(int col, int row, int slotState){
   int x = ix + col*SLOT_SIZE;
   int y = iy + row*SLOT_SIZE;
@@ -178,7 +164,6 @@ void showSlot(int col, int row, int slotState){
           break;
   }
 }
-
 // select num of bombs
 void mouseClicked(){
   if ( gameState == GAME_START &&
@@ -197,7 +182,6 @@ void mouseClicked(){
        gameState = GAME_RUN;
   }
 }
-
 void mousePressed(){
   if ( gameState == GAME_RUN &&
        mouseX >= ix && mouseX <= ix+sideLength && 
@@ -207,8 +191,8 @@ void mousePressed(){
       int col = (mouseX - ix) / SLOT_SIZE;
       int row = (mouseY - iy) / SLOT_SIZE;   
       if ( slot[col][row] == SLOT_OFF ){
-        slot[col][row] = SLOT_SAFE;
-        showSlot(col,row,slot[col][row]);
+        //slot[col][row] = SLOT_SAFE;
+        showSlot(col,row,SLOT_SAFE);
         clickCount++;
       }
       if ( slot[col][row] == SLOT_BOMB ){
@@ -220,7 +204,6 @@ void mousePressed(){
     
   }
 }
-
 // press enter to start
 void keyPressed(){
   if(key==ENTER && (gameState == GAME_WIN || 
